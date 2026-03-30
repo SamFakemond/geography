@@ -18,6 +18,31 @@
   --yellow:#fbbf24;
   --sw:264px;--r:8px;
 }
+body.light-mode{
+  --bg:#f0f4f2;--bg2:#ffffff;--bg3:#e8eeeb;
+  --sb:#e2ebe6;
+  --g:#2a7a58;--gd:#1f5c42;--gg:rgba(42,122,88,.10);
+  --t:#0f1f18;--tm:#3d6050;--td:rgba(42,122,88,.55);
+  --bd:#c8d9d0;--bd2:#b0c9be;
+  --red:#dc2626;--redbg:rgba(220,38,38,.08);
+  --yellow:#d97706;
+}
+
+/* THEME TOGGLE BUTTON */
+#theme-toggle{
+  background:none;
+  border:1px solid var(--bd2);
+  color:var(--tm);
+  border-radius:var(--r);
+  cursor:pointer;
+  font-size:12px;
+  padding:7px 12px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .18s;
+  width:100%;
+  text-align:center;
+}
+#theme-toggle:hover{border-color:var(--g);color:var(--g);background:var(--gg)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--t);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.65;display:flex;min-height:100vh;overflow-x:hidden}
 a{color:var(--g);text-decoration:none}
@@ -212,7 +237,7 @@ a{color:var(--g);text-decoration:none}
 .term-name{display:block;font-weight:700;color:var(--g);font-size:13px;margin-bottom:3px}
 .term-def{font-size:13px;color:var(--tm);line-height:1.5}
 .case-study{
-  background:rgba(10,30,20,.6);border:1px solid #22543d;
+  background:var(--bg3);border:1px solid var(--bd);
   border-radius:var(--r);margin-bottom:14px;overflow:hidden;
 }
 .cs-head{
@@ -225,7 +250,7 @@ a{color:var(--g);text-decoration:none}
 .cs-body li{margin-bottom:4px}
 .cs-body strong{color:var(--t)}
 .formula-box{
-  background:#071510;border:1px solid var(--g);
+  background:var(--bg3);border:1px solid var(--g);
   border-radius:var(--r);padding:14px 16px;margin-bottom:14px;
 }
 .formula-title{font-size:12px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
@@ -478,6 +503,7 @@ a{color:var(--g);text-decoration:none}
     </div>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
     <button id="btn-reset">↺ Reset Progress</button>
+    <button id="theme-toggle">☀️ <span id="theme-label">Light mode</span></button>
     <div class="sb-brand">
       <span class="sb-brand-by">made by</span>
       <img src="https://i.ibb.co/pjGmCDw4/zoomineer-logo-removebg-preview.png" alt="Zoomineer" class="sb-brand-logo" onerror="this.style.display='none'">
@@ -2127,6 +2153,35 @@ const mblob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+j
 const mlink = document.createElement('link');
 mlink.rel = 'manifest'; mlink.href = URL.createObjectURL(mblob);
 document.head.appendChild(mlink);
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+(function(){
+  const btn   = document.getElementById('theme-toggle');
+  const label = document.getElementById('theme-label');
+  const saved = localStorage.getItem('geo_theme') || 'dark';
+
+  function applyTheme(t){
+    if(t === 'light'){
+      document.body.classList.add('light-mode');
+      btn.firstChild.textContent = '🌙 ';
+      label.textContent = 'Dark mode';
+    } else {
+      document.body.classList.remove('light-mode');
+      btn.firstChild.textContent = '☀️ ';
+      label.textContent = 'Light mode';
+    }
+  }
+
+  applyTheme(saved);
+
+  btn.addEventListener('click', function(){
+    const next = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+    localStorage.setItem('geo_theme', next);
+    applyTheme(next);
+  });
+})();
 
 /* ============================================================
    INIT
